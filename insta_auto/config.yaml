@@ -1,0 +1,20 @@
+account: top.pick00
+output_dir: output
+music_dir: music
+fonts_dir: assets/fonts
+default_card_count: 5
+default_seconds_per_slide: 5
+default_hashtags:
+  - 추천
+  - 정보
+brand:
+  bg: "#F8F6F2"
+  accent: "#1A1A1A"
+  text: "#1A1A1A"
+  muted: "#6B6B6B"
+card:
+  width: 1080
+  height: 1350
+reel_frame:
+  width: 1080
+  height: 1920

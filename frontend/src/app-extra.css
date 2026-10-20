@@ -1,0 +1,102 @@
+/* insta2-specific additions on top of Studio style.css */
+
+.dropzone {
+  border: 1.5px dashed #b8c7ef;
+  border-radius: var(--radius);
+  padding: 28px 18px;
+  text-align: center;
+  background: var(--accent-soft);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.dropzone:hover,
+.dropzone.drag {
+  border-color: var(--accent);
+  background: #d9e4ff;
+}
+.dropzone p { margin: 0 0 6px; }
+
+.photo-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+.photo-thumbs img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.asset-stage {
+  width: min(100%, 320px);
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0b1220;
+  border: 1px solid var(--line);
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.asset-stage.reel-mode {
+  aspect-ratio: 9 / 16;
+  max-height: 56vh;
+}
+.asset-stage img,
+.asset-stage video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.library-card {
+  cursor: pointer;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+  text-align: left;
+  width: 100%;
+}
+.library-card strong {
+  display: block;
+  font-family: var(--font-display);
+  margin-bottom: 6px;
+}
+.library-card .chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 650;
+  margin-top: 8px;
+}
+.library-card .chip.published { background: #dcfce7; color: #166534; }
+.library-card .chip.rejected { background: #fee2e2; color: #991b1b; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--tab) + var(--safe-bottom) + 16px);
+  transform: translateX(-50%);
+  background: #0b1220;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 999px;
+  z-index: 100;
+  font-weight: 600;
+  max-width: 90vw;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 980px) {
+  body { padding-bottom: calc(var(--tab) + var(--safe-bottom)); }
+}

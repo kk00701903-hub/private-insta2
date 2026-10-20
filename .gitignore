@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+output/
+data/public/
+*.mp4
+!.gitkeep
+.DS_Store
+node_modules/
+frontend/dist/
+frontend/dev-dist/
+data/browser_profile/

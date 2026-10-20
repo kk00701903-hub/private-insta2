@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#2b5bff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Studio — top.pick00</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="icon" type="image/png" href="/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+</head>
+<body>
+  <div class="shell" id="shell">
+    <div class="nav-scrim" id="nav-scrim" hidden></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <div>
+          <strong>Studio</strong>
+          <small>카드 · 릴스</small>
+        </div>
+        <button class="btn ghost icon-btn sidebar-toggle" id="btn-sidebar-toggle" type="button" aria-label="사이드바 접기">&lt;</button>
+      </div>
+      <nav class="side-nav">
+        <button class="nav on" data-view="home">시작</button>
+        <button class="nav" data-view="create">만들기</button>
+        <button class="nav" data-view="preview">미리보기</button>
+        <button class="nav" data-view="library">보관함</button>
+        <button class="nav" data-view="settings">설정</button>
+      </nav>
+      <div class="side-meta">
+        <p id="side-brand">@top.pick00</p>
+        <p id="side-schedule">승인 후 업로드</p>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-title">
+          <button class="btn ghost icon-btn menu-btn" id="btn-nav-open" type="button" aria-label="메뉴">☰</button>
+          <div>
+            <p class="eyebrow" id="eyebrow">만들기</p>
+            <h1 id="page-title">시작</h1>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="view on" id="view-home">
+          <div class="home-hero">
+            <h2>무엇을 만들까요?</h2>
+            <p>사진을 넣고 코멘트를 쓰면 카드뉴스·릴스를 만들고, 확인 후 인스타에 올립니다.</p>
+            <div class="choice-grid">
+              <button class="choice-card" id="btn-choose-photo" type="button">
+                <span class="choice-kicker">Instagram</span>
+                <strong>사진 캐러셀</strong>
+                <p>4:5 카드뉴스 N장을 만들고 승인 후 게시합니다.</p>
+              </button>
+              <button class="choice-card" id="btn-choose-reel" type="button">
+                <span class="choice-kicker">Instagram</span>
+                <strong>릴스 만들기</strong>
+                <p>세로 프레임을 이어 붙이고 음악과 함께 MP4로 만듭니다.</p>
+              </button>
+              <button class="choice-card" id="btn-choose-both" type="button">
+                <span class="choice-kicker">Both</span>
+                <strong>카드 + 릴스</strong>
+                <p>한 번에 캐러셀과 릴스를 같이 제작합니다.</p>
+              </button>
+              <button class="choice-card" id="btn-choose-library" type="button">
+                <span class="choice-kicker">Library</span>
+                <strong>보관함</strong>
+                <p>이전에 만든 시안을 다시 보고 승인·거절합니다.</p>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-create">
+          <div class="panel-head">
+            <div>
+              <h2>콘텐츠 만들기</h2>
+              <p>사진 · 코멘트 · 장수 · 느낌을 넣으면 시안을 제작합니다.</p>
+            </div>
+            <button class="btn ghost" id="btn-back-home-create" type="button">← 시작으로</button>
+          </div>
+
+          <div class="hero-panel">
+            <h2>1. 사진</h2>
+            <p>한 장 이상 선택하세요. 드래그 앤 드롭도 됩니다.</p>
+            <div class="dropzone" id="dropzone">
+              <input id="input-photos" type="file" accept="image/*" multiple hidden />
+              <p><strong>탭해서 사진 선택</strong></p>
+              <p class="muted" id="photo-count">선택된 사진 없음</p>
+            </div>
+            <div class="photo-thumbs" id="photo-thumbs"></div>
+          </div>
+
+          <div class="hero-panel">
+            <h2>2. 코멘트 · 옵션</h2>
+            <label>코멘트
+              <textarea id="input-comment" rows="4" placeholder="주제·핵심 내용·분위기를 적어 주세요"></textarea>
+            </label>
+            <label>느낌 (원본과 다르게)
+              <input id="input-mood" type="text" placeholder="예: 귀엽게, 정보형, 사진 위주" />
+            </label>
+            <div class="count-grid photo-count-grid" id="format-grid" style="margin: 16px 0;">
+              <button class="btn primary count-opt" type="button" data-fmt="photo">사진</button>
+              <button class="btn ghost count-opt" type="button" data-fmt="reel">릴스</button>
+              <button class="btn ghost count-opt" type="button" data-fmt="both">둘 다</button>
+            </div>
+            <div class="url-row">
+              <label style="flex:1">장수
+                <input id="input-count" type="number" min="2" max="10" value="5" />
+              </label>
+              <label style="flex:1">장당 초 (릴스)
+                <input id="input-seconds" type="number" min="1" max="15" step="0.5" value="5" />
+              </label>
+            </div>
+            <label>음악 (릴스 · 선택)
+              <input id="input-music" type="file" accept="audio/*,.mp3,.wav,.m4a" />
+            </label>
+            <label class="hint" style="display:flex;gap:8px;align-items:center;margin-top:12px;">
+              <input id="input-offline" type="checkbox" />
+              오프라인 분석 (Claude 키 없이 테스트)
+            </label>
+            <div class="btn-row" style="margin-top:20px;">
+              <button class="btn primary" id="btn-generate" type="button">시안 만들기</button>
+            </div>
+            <p class="hint" id="create-status"></p>
+          </div>
+        </section>
+
+        <section class="view" id="view-preview">
+          <div class="panel-head">
+            <div>
+              <h2>미리보기 · 승인</h2>
+              <p>결과가 마음에 들면 올린 뒤에야 인스타에 게시됩니다.</p>
+            </div>
+            <button class="btn ghost" id="btn-back-home-preview" type="button">← 시작으로</button>
+          </div>
+
+          <div class="photo-result" id="preview-empty">
+            <div class="photo-result-head">
+              <h3>아직 시안이 없습니다</h3>
+              <p class="muted">만들기 화면에서 사진을 넣고 시안을 생성하세요.</p>
+            </div>
+            <button class="btn primary" id="btn-go-create" type="button">만들기로</button>
+          </div>
+
+          <div class="photo-result" id="preview-panel" hidden>
+            <div class="photo-result-head">
+              <h3 id="preview-topic">주제</h3>
+              <p class="muted" id="preview-meta">—</p>
+            </div>
+            <div class="photo-result-layout">
+              <div class="photo-result-main">
+                <div class="asset-stage" id="preview-stage"></div>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn ghost" id="btn-prev-slide" type="button">‹ 이전</button>
+                  <button class="btn ghost" id="btn-next-slide" type="button">다음 ›</button>
+                </div>
+              </div>
+              <div>
+                <h3 style="margin-top:0;">캡션</h3>
+                <p id="preview-caption" style="white-space:pre-wrap;"></p>
+                <p class="muted" id="preview-tags"></p>
+                <div class="btn-row" style="margin-top:20px;">
+                  <button class="btn primary" id="btn-approve" type="button">승인 · 업로드</button>
+                  <button class="btn danger" id="btn-reject" type="button">거절</button>
+                </div>
+                <p class="hint" id="preview-status"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-library">
+          <div class="panel-head">
+            <div>
+              <h2>보관함</h2>
+              <p>최근 제작한 시안 목록입니다.</p>
+            </div>
+            <button class="btn ghost" id="btn-refresh-library" type="button">새로고침</button>
+          </div>
+          <div class="campaign-grid" id="library-grid"></div>
+          <p class="empty-copy" id="library-empty">아직 작업이 없습니다.</p>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="panel-head">
+            <div>
+              <h2>설정</h2>
+              <p>키는 이 PC의 <code>.env</code>에만 저장됩니다. 코드에 넣지 마세요.</p>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <h2>연결 상태</h2>
+            <ul class="hint" id="settings-status" style="list-style:disc;padding-left:1.2rem;"></ul>
+            <details class="guide">
+              <summary>.env · Kling CLI 안내</summary>
+              <ol>
+                <li><code>CLAUDE_API_KEY</code> — 사진·코멘트 분석</li>
+                <li><code>IG_USER_ID</code> / <code>IG_ACCESS_TOKEN</code> — Graph API 게시</li>
+                <li><code>IMGBB_API_KEY</code> 또는 <code>PUBLIC_BASE_URL</code> — 캐러셀 공개 URL</li>
+                <li>Kling 일러스트: 터미널에서 <code>npm run kling:login</code> (브라우저 OAuth). 또는 <code>KLING_API_KEY</code></li>
+                <li><code>KLING_BACKEND=auto|cli|api</code> — 기본 auto (CLI 우선)</li>
+              </ol>
+            </details>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="하단 메뉴">
+    <button class="nav on" data-view="home">시작</button>
+    <button class="nav" data-view="create">만들기</button>
+    <button class="nav" data-view="preview">미리보기</button>
+    <button class="nav" data-view="library">보관함</button>
+    <button class="nav" data-view="settings">설정</button>
+  </nav>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <div class="install-bar" id="install-bar" hidden>
+    <p>홈 화면에 추가하면 앱처럼 쓸 수 있습니다.</p>
+    <button class="btn primary" id="btn-install" type="button">설치</button>
+    <button class="btn ghost" id="btn-install-close" type="button">닫기</button>
+  </div>
+
+  <div class="setup-bar" id="setup-bar" hidden>
+    <div>
+      <strong>API 키가 필요합니다</strong>
+      <p>Claude 키가 없으면 오프라인 분석으로 테스트할 수 있습니다. 게시는 IG 토큰이 필요합니다.</p>
+    </div>
+    <button class="btn primary" id="btn-setup-go" type="button">설정으로</button>
+    <button class="btn ghost" id="btn-setup-close" type="button">닫기</button>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

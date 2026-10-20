@@ -1,0 +1,25 @@
+{
+  "name": "insta2-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n api,ui -c cyan,magenta \"node scripts/run-api.mjs\" \"vite\"",
+    "api": "node scripts/run-api.mjs",
+    "ui": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "kling:login": "kling login",
+    "kling:whoami": "kling who_am_i",
+    "kling:account": "kling account",
+    "browser:meta": "node scripts/run-python.mjs scripts/browser_open.py meta",
+    "browser:explorer": "node scripts/run-python.mjs scripts/browser_open.py explorer",
+    "browser:ig-token": "node scripts/run-python.mjs scripts/ig_token_setup.py"
+  },
+  "devDependencies": {
+    "@klingai/cli-global": "^0.2.3",
+    "concurrently": "^9.2.1",
+    "vite": "^6.3.5",
+    "vite-plugin-pwa": "^1.0.3",
+    "workbox-window": "^7.3.0"
+  }
+}
