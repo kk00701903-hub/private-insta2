@@ -117,3 +117,55 @@ def encode_reel(
             raise VideoError(result.stderr[-2000:] or "ffmpeg silent audio failed")
 
     return out_path
+
+
+def run_ffmpeg(cmd: list[str], *, timeout: int = 900) -> subprocess.CompletedProcess[str]:
+    """Run an ffmpeg argv (cmd[0] is the binary); raise VideoError with the stderr tail."""
+    try:
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise VideoError(f"ffmpeg timed out after {timeout}s") from exc
+    if result.returncode != 0:
+        raise VideoError(result.stderr[-2000:] or f"ffmpeg exit {result.returncode}")
+    return result
+
+
+def probe_media(path: Path) -> dict:
+    """Parse `ffmpeg -i` output (imageio-ffmpeg ships no ffprobe)."""
+    import re
+
+    result = subprocess.run(
+        [_ffmpeg(), "-hide_banner", "-i", str(path)],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    err = result.stderr or ""
+    info: dict = {"duration": None, "video": None, "audio": None}
+    m = re.search(r"Duration: (\d+):(\d+):(\d+(?:\.\d+)?)", err)
+    if m:
+        info["duration"] = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+    v = re.search(r"Stream #\S+.*Video: (.+)", err)
+    if v:
+        line = v.group(1)
+        size = re.search(r"(\d{2,5})x(\d{2,5})", line)
+        fps = re.search(r"([\d.]+) fps", line)
+        info["video"] = {
+            "codec": line.split(",")[0].strip(),
+            "pix_fmt": "yuv420p" if "yuv420p" in line else None,
+            "width": int(size.group(1)) if size else None,
+            "height": int(size.group(2)) if size else None,
+            "fps": float(fps.group(1)) if fps else None,
+        }
+    a = re.search(r"Stream #\S+.*Audio: (.+)", err)
+    if a:
+        line = a.group(1)
+        rate = re.search(r"(\d+) Hz", line)
+        info["audio"] = {
+            "codec": line.split(",")[0].strip(),
+            "sample_rate": int(rate.group(1)) if rate else None,
+        }
+    return info

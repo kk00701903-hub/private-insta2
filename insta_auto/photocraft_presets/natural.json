@@ -1,0 +1,9 @@
+{
+  "label": "자연스럽게",
+  "description": "원본 색을 살리고 살짝 선명하게",
+  "steps": [
+    ["image.adjustments.vibrance", {"vibrance": 15, "saturation": 0}],
+    ["image.adjustments.brightnessContrast", {"brightness": 4, "contrast": 8}]
+  ],
+  "pillow": {"color": 1.1, "contrast": 1.06, "brightness": 1.02}
+}

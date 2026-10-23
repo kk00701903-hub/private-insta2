@@ -13,7 +13,8 @@
     "kling:account": "kling account",
     "browser:meta": "node scripts/run-python.mjs scripts/browser_open.py meta",
     "browser:explorer": "node scripts/run-python.mjs scripts/browser_open.py explorer",
-    "browser:ig-token": "node scripts/run-python.mjs scripts/ig_token_setup.py"
+    "browser:ig-token": "node scripts/run-python.mjs scripts/ig_token_setup.py",
+    "photocraft:install": "node scripts/run-python.mjs scripts/install_photocraft.py"
   },
   "devDependencies": {
     "@klingai/cli-global": "^0.2.3",

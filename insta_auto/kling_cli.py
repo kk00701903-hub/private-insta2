@@ -239,3 +239,108 @@ def text_to_image(
         resp.raise_for_status()
         dest.write_bytes(resp.content)
     return dest
+
+
+# ---------------------------------------------------------------------------------------------
+# Image-to-video (AI 릴스). `kling image_to_video --model M --image ./frame.png "prompt"
+# --duration N --poll S` per the @klingai/cli-global README. Paid: callers must get the user's
+# confirmation first and must never retry a failed job automatically.
+# ---------------------------------------------------------------------------------------------
+
+DEFAULT_VIDEO_POLL = 600
+
+
+def available_models(cfg: AppConfig, kind: str) -> list[str]:
+    """Model names the logged-in account declares for `kind` (e.g. image_to_video)."""
+    payload = run_kling(["who_am_i"], cfg=cfg, timeout=60)
+    if not isinstance(payload, dict):
+        return []
+    models = (payload.get("availableModels") or {}).get(kind) or []
+    return [m.get("model") for m in models if isinstance(m, dict) and m.get("model")]
+
+
+def pick_video_model(cfg: AppConfig) -> str:
+    env = (os.getenv("KLING_VIDEO_MODEL") or "").strip()
+    if env:
+        return env
+    try:
+        models = available_models(cfg, "image_to_video")
+    except KlingCliError:
+        models = []
+    if models:
+        return str(models[0])
+    return "kling-video-v4_0_flash"
+
+
+def _extract_video_urls(payload: Any) -> list[str]:
+    urls: list[str] = []
+
+    def walk(obj: Any) -> None:
+        if isinstance(obj, dict):
+            for key in ("url_without_watermark", "urlWithoutWatermark", "video_url", "videoUrl", "url"):
+                val = obj.get(key)
+                if isinstance(val, str) and val.startswith("http"):
+                    urls.append(val)
+            for v in obj.values():
+                walk(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                walk(item)
+
+    walk(payload)
+    seen: set[str] = set()
+    ordered = [u for u in urls if not (u in seen or seen.add(u))]
+    videos = [u for u in ordered if ".mp4" in u.lower() or "video" in u.lower()]
+    return videos or ordered
+
+
+def build_image_to_video_args(
+    image: Path,
+    prompt: str,
+    *,
+    model: str,
+    duration: int,
+    poll: int,
+) -> list[str]:
+    return [
+        "image_to_video",
+        "--model",
+        model,
+        "--image",
+        str(image),
+        "--duration",
+        str(int(duration)),
+        "--prompt",
+        prompt or "",
+        f"--poll={int(poll)}",
+    ]
+
+
+def image_to_video(
+    image: Path,
+    dest: Path,
+    *,
+    cfg: AppConfig,
+    prompt: str,
+    duration: int = 5,
+    model: str | None = None,
+    poll: int | None = None,
+) -> Path:
+    """Submit ONE image-to-video job, wait for it, download the mp4. No retries."""
+    import httpx
+
+    poll_s = int(poll or os.getenv("KLING_VIDEO_POLL_SECONDS") or DEFAULT_VIDEO_POLL)
+    args = build_image_to_video_args(
+        Path(image), prompt, model=model or pick_video_model(cfg), duration=duration, poll=poll_s
+    )
+    payload = run_kling(args, cfg=cfg, timeout=poll_s + 180)
+    urls = _extract_video_urls(payload)
+    if not urls:
+        raise KlingCliError(f"No video URL in Kling CLI response: {payload!r}"[:800])
+    dest = Path(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with httpx.Client(timeout=300.0, follow_redirects=True) as client:
+        resp = client.get(urls[0])
+        resp.raise_for_status()
+        dest.write_bytes(resp.content)
+    return dest

@@ -1,0 +1,9 @@
+{
+  "label": "흑백",
+  "description": "대비 있는 흑백",
+  "steps": [
+    ["image.adjustments.blackWhite", {}],
+    ["image.adjustments.brightnessContrast", {"brightness": 0, "contrast": 18}]
+  ],
+  "pillow": {"grayscale": true, "contrast": 1.18}
+}

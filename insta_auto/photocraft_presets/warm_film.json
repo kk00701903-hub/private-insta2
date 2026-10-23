@@ -1,0 +1,11 @@
+{
+  "label": "따뜻한 필름",
+  "description": "웜톤 필터, 바랜 블랙, 약한 그레인",
+  "steps": [
+    ["image.adjustments.photoFilter", {"filter": "warming85", "density": 22, "preserveLuminosity": true}],
+    ["image.adjustments.curves", {"points": [[0, 20], [64, 66], [192, 196], [255, 242]]}],
+    ["image.adjustments.vibrance", {"vibrance": -8, "saturation": 0}],
+    ["filter.noise.addNoise", {"amount": 3, "distribution": "gaussian", "monochromatic": true, "seed": 7}]
+  ],
+  "pillow": {"warmth": 0.08, "fade": 18, "color": 0.92, "contrast": 0.97}
+}

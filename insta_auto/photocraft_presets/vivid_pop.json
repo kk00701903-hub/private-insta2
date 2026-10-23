@@ -1,0 +1,9 @@
+{
+  "label": "선명한 팝",
+  "description": "채도와 대비를 올린 눈에 띄는 룩",
+  "steps": [
+    ["image.adjustments.vibrance", {"vibrance": 40, "saturation": 10}],
+    ["image.adjustments.curves", {"points": [[0, 0], [64, 52], [192, 206], [255, 255]]}]
+  ],
+  "pillow": {"color": 1.35, "contrast": 1.15}
+}

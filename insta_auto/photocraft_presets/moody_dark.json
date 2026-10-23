@@ -1,0 +1,10 @@
+{
+  "label": "무드 있게",
+  "description": "어둡고 차분한 시네마틱 룩",
+  "steps": [
+    ["image.adjustments.exposure", {"exposure": -0.35, "offset": 0, "gamma": 1}],
+    ["image.adjustments.hueSaturation", {"hue": 0, "saturation": -22, "lightness": 0}],
+    ["image.adjustments.curves", {"points": [[0, 12], [70, 58], [190, 200], [255, 248]]}]
+  ],
+  "pillow": {"brightness": 0.82, "color": 0.78, "contrast": 1.12, "fade": 8}
+}

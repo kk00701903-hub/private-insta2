@@ -1,0 +1,10 @@
+{
+  "label": "시원하고 깔끔하게",
+  "description": "쿨톤, 밝고 또렷한 정보형 룩",
+  "steps": [
+    ["image.adjustments.photoFilter", {"filter": "cooling80", "density": 15, "preserveLuminosity": true}],
+    ["image.adjustments.brightnessContrast", {"brightness": 10, "contrast": 12}],
+    ["image.adjustments.vibrance", {"vibrance": 12, "saturation": 0}]
+  ],
+  "pillow": {"warmth": -0.06, "brightness": 1.06, "contrast": 1.1, "color": 1.05}
+}

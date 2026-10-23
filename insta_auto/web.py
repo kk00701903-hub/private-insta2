@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from insta_auto.aireels_api import router as aireels_router
 from insta_auto.config import ROOT, load_config
 from insta_auto.illustrate import kling_ready
 from insta_auto.pipeline import (
@@ -36,6 +37,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.include_router(aireels_router)  # AI 릴스 (/api/aireels/*)
 
     @app.get("/api/state")
     def state():
