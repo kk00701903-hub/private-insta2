@@ -6,6 +6,7 @@ const TITLES = {
   preview: "미리보기",
   library: "보관함",
   settings: "설정",
+  monetize: "수익화",
 };
 
 const EYEBROWS = {
@@ -14,6 +15,7 @@ const EYEBROWS = {
   preview: "승인",
   library: "기록",
   settings: "환경설정",
+  monetize: "제휴 · 댓글 DM",
 };
 
 const state = {
@@ -111,6 +113,7 @@ function previewSlides() {
 }
 
 function renderPreview() {
+  window.dispatchEvent(new CustomEvent("studio:job", { detail: state.job })); // 수익화 패널(monetize.js)
   const empty = $("preview-empty");
   const panel = $("preview-panel");
   if (!state.job) {

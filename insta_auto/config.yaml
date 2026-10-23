@@ -18,3 +18,23 @@ card:
 reel_frame:
   width: 1080
   height: 1920
+# ===== 수익화 에이전트 (쿠팡 파트너스 제휴 · 댓글→DM 링크) =====
+# 키·토큰은 .env 에만. 여기 값은 기본값이며 일부는 PWA '수익화' 화면에서 바꿀 수 있다.
+monetize:
+  # 공정위 고지 문구 — 제휴 링크가 있으면 항상 캡션 맨 앞에 자동 삽입 (비우면 기본 문구 사용, 삭제 불가)
+  disclosure_text: "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+  cta_text: "댓글에 '링크' 남기면 DM으로 보내드려요"
+  suggest_count: 5
+  coupang_cache_minutes: 60
+  comment_dm_enabled: false        # 전체 스위치 (PWA에서 켜기)
+  keywords: ["링크", "link", "정보"]
+  dm_template: "요청하신 링크입니다.\n{link}\n\n{disclosure}"
+  public_reply_enabled: true
+  public_reply_text: "DM 보냈어요!"
+  max_dm_per_hour: 200             # Meta 한도(750/시간)보다 낮게
+  min_seconds_between_dm: 3
+  reply_window_days: 7             # Meta 정책상 최대 7일
+  poll_enabled: true
+  poll_interval_seconds: 120
+  max_posts_to_poll: 20
+  messaging_api: facebook_login    # facebook_login | instagram_login

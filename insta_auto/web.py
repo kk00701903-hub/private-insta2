@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from insta_auto.config import ROOT, load_config
 from insta_auto.illustrate import kling_ready
+from insta_auto.monetize_api import register_monetize
 from insta_auto.pipeline import (
     IMAGE_EXTS,
     create_job,
@@ -165,6 +166,8 @@ def create_app() -> FastAPI:
         if not path.exists() or not path.is_file():
             raise HTTPException(404, "Not found")
         return FileResponse(path)
+
+    register_monetize(app)  # 수익화 에이전트 (쿠팡 제휴 · 댓글→DM)
 
     dist = ROOT / "frontend" / "dist"
     if dist.exists():

@@ -35,6 +35,7 @@
         <button class="nav" data-view="create">만들기</button>
         <button class="nav" data-view="preview">미리보기</button>
         <button class="nav" data-view="library">보관함</button>
+        <button class="nav" data-view="monetize">수익화</button>
         <button class="nav" data-view="settings">설정</button>
       </nav>
       <div class="side-meta">
@@ -173,6 +174,7 @@
                 <h3 style="margin-top:0;">캡션</h3>
                 <p id="preview-caption" style="white-space:pre-wrap;"></p>
                 <p class="muted" id="preview-tags"></p>
+                <div id="monetize-panel"></div>
                 <div class="btn-row" style="margin-top:20px;">
                   <button class="btn primary" id="btn-approve" type="button">승인 · 업로드</button>
                   <button class="btn danger" id="btn-reject" type="button">거절</button>
@@ -193,6 +195,53 @@
           </div>
           <div class="campaign-grid" id="library-grid"></div>
           <p class="empty-copy" id="library-empty">아직 작업이 없습니다.</p>
+        </section>
+
+        <section class="view" id="view-monetize">
+          <div class="panel-head">
+            <div>
+              <h2>수익화 에이전트</h2>
+              <p>쿠팡 파트너스 제휴 게시물의 댓글에 키워드가 있으면, 그 댓글 작성자에게만 공식 API로 DM 1회를 보냅니다.</p>
+            </div>
+            <button class="btn ghost" id="mz-refresh" type="button">새로고침</button>
+          </div>
+          <div class="hero-panel">
+            <h2>댓글 → DM 자동 응답</h2>
+            <label class="mz-switch"><input type="checkbox" id="mz-global" /> <strong>전체 켜기</strong> (꺼져 있으면 아무것도 보내지 않음)</label>
+            <label>키워드 (쉼표로 구분)
+              <input id="mz-keywords" type="text" placeholder="링크, link, 정보" />
+            </label>
+            <label class="mz-switch"><input type="checkbox" id="mz-public" /> 공개 답글도 달기</label>
+            <input id="mz-public-text" type="text" placeholder="DM 보냈어요!" />
+            <div class="url-row">
+              <label style="flex:1">시간당 최대 DM
+                <input id="mz-max" type="number" min="1" max="500" value="200" />
+              </label>
+              <label style="flex:1">폴링 주기(초)
+                <input id="mz-interval" type="number" min="30" value="120" />
+              </label>
+            </div>
+            <label class="mz-switch"><input type="checkbox" id="mz-poll" /> 폴링 사용 (공개 HTTPS 없이 로컬에서 동작)</label>
+            <div class="btn-row" style="margin-top:12px;">
+              <button class="btn primary" id="mz-save" type="button">저장</button>
+              <button class="btn ghost" id="mz-poll-now" type="button">지금 댓글 확인</button>
+            </div>
+            <p class="hint">규칙: 댓글당 1회 · 댓글 후 7일 이내 · 내 계정 댓글 제외 · 댓글 안 단 사람에게는 절대 보내지 않음.</p>
+            <ul class="hint" id="mz-keys" style="list-style:disc;padding-left:1.2rem;"></ul>
+          </div>
+          <div class="hero-panel">
+            <h2>제휴 게시물</h2>
+            <div id="mz-posts"></div>
+          </div>
+          <div class="hero-panel">
+            <h2>기록</h2>
+            <div class="mz-log-wrap">
+              <table class="mz-log">
+                <thead><tr><th>시각</th><th>결과</th><th>계정</th><th>댓글</th><th>키워드</th><th>사유</th></tr></thead>
+                <tbody id="mz-log"></tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         <section class="view" id="view-settings">
@@ -226,6 +275,7 @@
     <button class="nav" data-view="create">만들기</button>
     <button class="nav" data-view="preview">미리보기</button>
     <button class="nav" data-view="library">보관함</button>
+    <button class="nav" data-view="monetize">수익화</button>
     <button class="nav" data-view="settings">설정</button>
   </nav>
 

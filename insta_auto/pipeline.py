@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 
+from insta_auto.affiliate.jobs import final_caption_for_job
 from insta_auto.analyze import AnalysisResult, analyze, analyze_offline
 from insta_auto.cards import render_cards
 from insta_auto.config import AppConfig, load_config
@@ -207,20 +208,22 @@ def publish_job(job_id: str, *, cfg: AppConfig | None = None) -> JobResult:
     if job.status == "published":
         return job
 
+    # 수익화: 제휴 링크가 있으면 공정위 고지 문구를 캡션 맨 앞에 넣는다 (없으면 그대로)
+    caption, hashtags = final_caption_for_job(job, cfg=cfg)
     media_ids: list[str] = []
     out = Path(job.out_dir)
     if job.fmt in {"photo", "both"} and job.card_paths:
         cards = [cfg.output_dir / p for p in job.card_paths]
         mid = publish_carousel_sync(
-            cfg, cards, caption=job.caption, hashtags=job.hashtags
+            cfg, cards, caption=caption, hashtags=hashtags
         )
         media_ids.append(mid)
     if job.fmt in {"reel", "both"} and job.reel_path:
         mid = publish_reel_sync(
             cfg,
             cfg.output_dir / job.reel_path,
-            caption=job.caption,
-            hashtags=job.hashtags,
+            caption=caption,
+            hashtags=hashtags,
         )
         media_ids.append(mid)
 

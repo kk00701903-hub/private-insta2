@@ -11,3 +11,4 @@ node_modules/
 frontend/dist/
 frontend/dev-dist/
 data/browser_profile/
+data/monetize/
