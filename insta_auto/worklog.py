@@ -40,3 +40,15 @@ def append_worklog(
     with path.open("a", encoding="utf-8") as f:
         f.write(block)
     return path
+
+
+def append_event(title: str, lines: list[str], *, log_path: Path | None = None) -> Path:
+    """Non-job entry (예: 토큰 자동 갱신). Never pass secrets here."""
+    path = log_path or (ROOT / "작업기록.md")
+    if not path.exists():
+        path.write_text("# 작업 기록\n\n", encoding="utf-8")
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+    body = "\n".join(f"- {line}" for line in lines) or "- -"
+    with path.open("a", encoding="utf-8") as f:
+        f.write(f"\n## {ts} — {title}\n\n{body}\n\n")
+    return path

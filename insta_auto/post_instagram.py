@@ -8,6 +8,7 @@ from uuid import uuid4
 
 import httpx
 
+from insta_auto.caption import CAPTION_LIMIT, full_caption
 from insta_auto.config import AppConfig
 
 GRAPH_VERSION = "v22.0"
@@ -23,9 +24,7 @@ class ImageHostError(RuntimeError):
 
 
 def _caption(caption: str, hashtags: list[str]) -> str:
-    tag_line = " ".join(f"#{t.lstrip('#')}" for t in hashtags if t)
-    parts = [p for p in ((caption or "").strip(), tag_line) if p]
-    return "\n\n".join(parts)[:2200]
+    return full_caption(caption, hashtags)[:CAPTION_LIMIT]
 
 
 async def _request(

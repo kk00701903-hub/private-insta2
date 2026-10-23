@@ -35,6 +35,8 @@
         <button class="nav" data-view="create">만들기</button>
         <button class="nav" data-view="preview">미리보기</button>
         <button class="nav" data-view="library">보관함</button>
+        <button class="nav" data-view="queue">예약</button>
+        <button class="nav" data-view="history">이력</button>
         <button class="nav" data-view="settings">설정</button>
       </nav>
       <div class="side-meta">
@@ -53,6 +55,11 @@
           </div>
         </div>
       </header>
+
+      <div class="token-banner" id="token-banner" role="alert" hidden>
+        <p id="token-banner-text"></p>
+        <button class="btn ghost" id="btn-token-banner-close" type="button">닫기</button>
+      </div>
 
       <main>
         <section class="view on" id="view-home">
@@ -170,11 +177,28 @@
                 </div>
               </div>
               <div>
-                <h3 style="margin-top:0;">캡션</h3>
-                <p id="preview-caption" style="white-space:pre-wrap;"></p>
-                <p class="muted" id="preview-tags"></p>
-                <div class="btn-row" style="margin-top:20px;">
-                  <button class="btn primary" id="btn-approve" type="button">승인 · 업로드</button>
+                <h3 style="margin-top:0;">캡션 편집</h3>
+                <label>캡션
+                  <textarea id="edit-caption" rows="8" placeholder="캡션을 입력하세요"></textarea>
+                </label>
+                <label>해시태그 (띄어쓰기로 구분, # 생략 가능)
+                  <input id="edit-tags" type="text" placeholder="예: 카페 가을 주말" />
+                </label>
+                <div class="caption-meter" id="caption-meter"></div>
+                <ul class="caption-warn" id="caption-warn" hidden></ul>
+                <div class="btn-row">
+                  <button class="btn ghost" id="btn-save-caption" type="button">캡션 저장</button>
+                </div>
+
+                <div class="schedule-box">
+                  <label>예약 게시 (선택)
+                    <input id="input-schedule" type="datetime-local" />
+                  </label>
+                  <p class="hint">시간을 고르고 <strong>승인 · 예약</strong>을 누르면 그 시각에 자동으로 올라갑니다. 예약이 곧 승인입니다.</p>
+                </div>
+                <div class="btn-row" style="margin-top:16px;">
+                  <button class="btn primary" id="btn-approve" type="button">승인 · 지금 업로드</button>
+                  <button class="btn" id="btn-schedule" type="button">승인 · 예약</button>
                   <button class="btn danger" id="btn-reject" type="button">거절</button>
                 </div>
                 <p class="hint" id="preview-status"></p>
@@ -195,6 +219,41 @@
           <p class="empty-copy" id="library-empty">아직 작업이 없습니다.</p>
         </section>
 
+        <section class="view" id="view-queue">
+          <div class="panel-head">
+            <div>
+              <h2>예약 게시</h2>
+              <p>승인된 예약 목록입니다. 시간이 되면 서버가 자동으로 올립니다 (서버가 켜져 있어야 합니다).</p>
+            </div>
+            <button class="btn ghost" id="btn-refresh-queue" type="button">새로고침</button>
+          </div>
+          <div class="job-list" id="queue-list"></div>
+          <p class="empty-copy" id="queue-empty">예약된 게시물이 없습니다. 미리보기에서 시간을 골라 승인하세요.</p>
+        </section>
+
+        <section class="view" id="view-history">
+          <div class="panel-head">
+            <div>
+              <h2>작업 이력</h2>
+              <p>제작·게시 결과를 확인하고 다시 만들기, 게시 재시도, 파일 다운로드를 합니다.</p>
+            </div>
+            <button class="btn ghost" id="btn-refresh-history" type="button">새로고침</button>
+          </div>
+          <div class="history-filters">
+            <div class="chip-row" id="history-status">
+              <button class="btn primary filter-opt" type="button" data-status="">전체</button>
+              <button class="btn ghost filter-opt" type="button" data-status="ready">생성됨</button>
+              <button class="btn ghost filter-opt" type="button" data-status="scheduled">예약됨</button>
+              <button class="btn ghost filter-opt" type="button" data-status="published">게시됨</button>
+              <button class="btn ghost filter-opt" type="button" data-status="failed">실패</button>
+              <button class="btn ghost filter-opt" type="button" data-status="rejected">거절됨</button>
+            </div>
+            <input id="history-search" type="search" placeholder="주제·캡션·작업 ID 검색" />
+          </div>
+          <div class="job-list" id="history-list"></div>
+          <p class="empty-copy" id="history-empty" hidden>조건에 맞는 작업이 없습니다.</p>
+        </section>
+
         <section class="view" id="view-settings">
           <div class="panel-head">
             <div>
@@ -213,6 +272,7 @@
                 <li><code>IMGBB_API_KEY</code> 또는 <code>PUBLIC_BASE_URL</code> — 캐러셀 공개 URL</li>
                 <li>Kling 일러스트: 터미널에서 <code>npm run kling:login</code> (브라우저 OAuth). 또는 <code>KLING_API_KEY</code></li>
                 <li><code>KLING_BACKEND=auto|cli|api</code> — 기본 auto (CLI 우선)</li>
+                <li><code>IG_TOKEN_OBTAINED_AT</code> — 토큰 발급일 (만료 = 발급일 + 60일). <code>FB_APP_ID</code> / <code>FB_APP_SECRET</code>가 있으면 만료 10일 전부터 자동 갱신합니다.</li>
               </ol>
             </details>
           </div>
@@ -226,6 +286,8 @@
     <button class="nav" data-view="create">만들기</button>
     <button class="nav" data-view="preview">미리보기</button>
     <button class="nav" data-view="library">보관함</button>
+    <button class="nav" data-view="queue">예약</button>
+    <button class="nav" data-view="history">이력</button>
     <button class="nav" data-view="settings">설정</button>
   </nav>
 
